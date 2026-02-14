@@ -110,7 +110,7 @@ h1{
 <div id="password-screen">
   <h2>Şifre Gir</h2>
   <input type="password" id="password-input" placeholder="Şifre">
-  <button onclick="checkPassword()">Giriş</button>
+  <button id="password-btn">Giriş</button>
 </div>
 
 <h1>bugün 14 subat olması biseyi degistirmiyor ama</h1>
@@ -137,43 +137,40 @@ h1{
 <button id="toggle-sound">🔇</button>
 </div>
 
-<div id="player" style="display:none;"></div>
+<div id="player" style="display:none"></div>
+
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
 // PASSWORD
-function checkPassword(){
-  const pass=document.getElementById("password-input").value;
+document.getElementById("password-btn").addEventListener("click", ()=>{
+  const pass = document.getElementById("password-input").value;
   if(pass==="yagmur14"){
     document.getElementById("password-screen").style.display="none";
-  }else{
+  } else {
     alert("Yanlış şifre 😈");
   }
-}
+});
 
 // FOTOĞRAFLAR
-const fotoUrls=[
+const fotoUrls = [
   "WhatsApp Image 2026-02-14 at 02.24.27 (2).jpeg",
   "WhatsApp Image 2026-02-14 at 02.24.27.jpeg",
   "WhatsApp Image 2026-02-14 at 02.24.27 (3).jpeg",
   "WhatsApp Image 2026-02-14 at 02.24.40.jpeg"
 ];
-
-const gallery=document.getElementById("gallery");
-
+const gallery = document.getElementById("gallery");
 fotoUrls.forEach(url=>{
-  const img=document.createElement("img");
-  img.src=url;
+  const img = document.createElement("img");
+  img.src = url;
   gallery.appendChild(img);
 });
 
 // LOCAL STORAGE
-function saveAnswer(q,a){
-  localStorage.setItem(q,a);
-}
+function saveAnswer(q,a){ localStorage.setItem(q,a); }
 function loadAnswers(){
-  const q1=localStorage.getItem("q1");
-  const q2=localStorage.getItem("q2");
+  const q1 = localStorage.getItem("q1");
+  const q2 = localStorage.getItem("q2");
   if(q1) hideFirst();
   if(q2==="yes") document.getElementById("special-photo").style.display="block";
 }
@@ -196,42 +193,43 @@ function hideFirst(){
   no2.style.display="inline-block";
 }
 
-yes1.onclick=()=>{
+// BUTONLAR
+yes1.addEventListener("click", ()=>{
   saveAnswer("q1","yes");
   hideFirst();
   spawnHearts(20);
-};
-no1.onclick=()=>{
+});
+no1.addEventListener("click", ()=>{
   saveAnswer("q1","no");
   hideFirst();
   spawnHearts(20);
-};
-yes2.onclick=()=>{
+});
+yes2.addEventListener("click", ()=>{
   saveAnswer("q2","yes");
   document.getElementById("special-photo").style.display="block";
   spawnHearts(30);
-};
-no2.onmouseover=()=>{
+});
+no2.addEventListener("mouseover", ()=>{
   no2.style.position="absolute";
   no2.style.left=Math.random()*80+"%";
   no2.style.top=Math.random()*80+"%";
-};
+});
 
-// CANVAS PARTICLE
-const canvas=document.getElementById("bg-canvas");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-let particles=[];
+// CANVAS + HEART EFFECT
+const canvas = document.getElementById("bg-canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach((p, index)=>{
+  particles.forEach((p,index)=>{
     ctx.fillStyle="red";
     ctx.font="20px serif";
     ctx.fillText(p.text || "❤️", p.x, p.y);
-    p.y-=p.s;
-    if(p.y<0) particles.splice(index,1);
+    p.y -= p.s;
+    if(p.y < 0) particles.splice(index,1);
   });
   requestAnimationFrame(animate);
 }
@@ -248,42 +246,37 @@ function spawnHearts(count){
   }
 }
 
-// YOUTUBE
+// YOUTUBE MUSIC
 let player;
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('player',{
     height:'0',
     width:'0',
     videoId:'58YMgJIaT8w',
-    playerVars:{
-      autoplay:1,
-      loop:1,
-      playlist:'58YMgJIaT8w',
-      mute:1,
-      playsinline:1
-    }
+    playerVars:{ autoplay:1, loop:1, playlist:'58YMgJIaT8w', mute:1, playsinline:1 }
   });
 }
 const musicSelect=document.getElementById("music-select");
 const toggleBtn=document.getElementById("toggle-sound");
 let isMuted=true;
-musicSelect.onchange=()=>{
-  const id=musicSelect.value;
-  player.loadVideoById({videoId:id});
+
+musicSelect.addEventListener("change", ()=>{
+  player.loadVideoById({videoId:musicSelect.value});
   player.mute();
   toggleBtn.innerText="🔇";
   isMuted=true;
-};
-toggleBtn.onclick=()=>{
+});
+
+toggleBtn.addEventListener("click", ()=>{
   if(isMuted){
     player.unMute();
     toggleBtn.innerText="🔊";
-  }else{
+  } else {
     player.mute();
     toggleBtn.innerText="🔇";
   }
   isMuted=!isMuted;
-};
+});
 </script>
 </body>
 </html>
