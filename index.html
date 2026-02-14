@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>Private Gothic Drop</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -15,6 +18,8 @@ body{
   overflow-x:hidden;
   position:relative;
 }
+
+/* CANVAS */
 #bg-canvas{
   position:fixed;
   top:0;
@@ -23,6 +28,8 @@ body{
   height:100%;
   z-index:-1;
 }
+
+/* PASSWORD SCREEN */
 #password-screen{
   position:fixed;
   top:0;
@@ -36,6 +43,7 @@ body{
   align-items:center;
   z-index:9999;
 }
+
 #password-screen input{
   padding:10px;
   margin:10px;
@@ -43,6 +51,7 @@ body{
   border:2px solid red;
   color:red;
 }
+
 #password-screen button{
   padding:10px 20px;
   background:black;
@@ -50,14 +59,19 @@ body{
   color:red;
   cursor:pointer;
 }
+
+/* TEXT */
 h1{
   margin-top:40px;
   text-shadow:0 0 10px red;
 }
+
 .question{
   font-size:1.4rem;
   margin:20px;
 }
+
+/* BUTTONS */
 .btn{
   padding:10px 20px;
   margin:10px;
@@ -67,10 +81,39 @@ h1{
   cursor:pointer;
   transition:.3s;
 }
+
 .btn:hover{
   transform:scale(1.1);
   box-shadow:0 0 10px red;
 }
+
+/* GALLERY */
+.gallery{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+
+.gallery img{
+  width:130px;
+  height:130px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid red;
+}
+
+/* SPECIAL */
+#special-photo{
+  display:none;
+  margin:20px auto;
+  width:200px;
+  border:2px solid red;
+  border-radius:10px;
+}
+
+/* MUSIC BOX */
 .music-box{
   position:fixed;
   bottom:15px;
@@ -80,20 +123,18 @@ h1{
   border:2px solid red;
   border-radius:8px;
 }
-#alt-mesaj{
-  margin-top:20px;
-  font-size:1.2rem;
-}
 </style>
 </head>
+
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
+<!-- PASSWORD -->
 <div id="password-screen">
   <h2>Şifre Gir</h2>
   <input type="password" id="password-input" placeholder="Şifre">
-  <button id="password-btn">Giriş</button>
+  <button onclick="checkPassword()">Giriş</button>
 </div>
 
 <h1>bugün 14 subat olması biseyi degistirmiyor ama</h1>
@@ -108,6 +149,11 @@ h1{
 
 <p id="alt-mesaj">Sen mutluysan ben de mutluyum... Karanlıkta bile.</p>
 
+<img id="special-photo" src="kiz1.jpg">
+
+<div class="gallery" id="gallery"></div>
+
+<!-- MUSIC -->
 <div class="music-box">
 <select id="music-select">
 <option value="58YMgJIaT8w">Yağmurlar 1</option>
@@ -116,31 +162,57 @@ h1{
 <button id="toggle-sound">🔇</button>
 </div>
 
-<div id="player" style="display:none"></div>
-
+<div id="player" style="display:none;"></div>
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-// PASSWORD
-document.getElementById("password-btn").addEventListener("click", ()=>{
-  const pass = document.getElementById("password-input").value;
+
+/* PASSWORD */
+function checkPassword(){
+  const pass=document.getElementById("password-input").value;
   if(pass==="yagmur14"){
     document.getElementById("password-screen").style.display="none";
-  } else {
+  }else{
     alert("Yanlış şifre 😈");
   }
+}
+
+/* FOTOĞRAFLARINI BURAYA KOY */
+const fotoUrls=[
+  "kiz1.jpg",
+  "kiz2.jpg",
+  "kiz3.jpg",
+  "kiz4.jpg"
+];
+
+const gallery=document.getElementById("gallery");
+
+fotoUrls.forEach(url=>{
+  const img=document.createElement("img");
+  img.src=url;
+  gallery.appendChild(img);
 });
 
-// LOCAL STORAGE
-function saveAnswer(q,a){ localStorage.setItem(q,a); }
+/* LOCAL STORAGE */
+function saveAnswer(q,a){
+  localStorage.setItem(q,a);
+}
+
 function loadAnswers(){
-  const q1 = localStorage.getItem("q1");
-  const q2 = localStorage.getItem("q2");
-  if(q1) hideFirst();
-  if(q2==="yes") document.getElementById("alt-mesaj").innerText="Kalp patlaması! ❤️";
+  const q1=localStorage.getItem("q1");
+  const q2=localStorage.getItem("q2");
+
+  if(q1){
+    hideFirst();
+  }
+
+  if(q2==="yes"){
+    document.getElementById("special-photo").style.display="block";
+  }
 }
 loadAnswers();
 
-// BUTTONS
+/* BUTONLAR */
 const yes1=document.getElementById("yes1");
 const no1=document.getElementById("no1");
 const yes2=document.getElementById("yes2");
@@ -157,90 +229,100 @@ function hideFirst(){
   no2.style.display="inline-block";
 }
 
-// Evet/Hayır ve Kalpler
-yes1.addEventListener("click", ()=>{
+yes1.onclick=()=>{
   saveAnswer("q1","yes");
   hideFirst();
-  spawnHearts(20);
-});
-no1.addEventListener("click", ()=>{
+};
+
+no1.onclick=()=>{
   saveAnswer("q1","no");
   hideFirst();
-  spawnHearts(20);
-});
-yes2.addEventListener("click", ()=>{
+};
+
+yes2.onclick=()=>{
   saveAnswer("q2","yes");
-  document.getElementById("alt-mesaj").innerText="Kalp patlaması! ❤️";
-  spawnHearts(30);
-});
-no2.addEventListener("mouseover", ()=>{
+  document.getElementById("special-photo").style.display="block";
+};
+
+/* HAYIR KAÇMA */
+no2.onmouseover=()=>{
   no2.style.position="absolute";
   no2.style.left=Math.random()*80+"%";
   no2.style.top=Math.random()*80+"%";
-});
+};
 
-// CANVAS + HEART EFFECT
-const canvas = document.getElementById("bg-canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let particles = [];
+/* CANVAS PARTICLE */
+const canvas=document.getElementById("bg-canvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+for(let i=0;i<100;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2,
+    s:Math.random()*1+0.5
+  });
+}
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach((p,index)=>{
-    ctx.fillStyle="red";
-    ctx.font="20px serif";
-    ctx.fillText(p.text || "❤️", p.x, p.y);
-    p.y -= p.s;
-    if(p.y < 0) particles.splice(index,1);
+  ctx.fillStyle="rgba(255,0,0,0.6)";
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+    p.y-=p.s;
+    if(p.y<0)p.y=canvas.height;
   });
   requestAnimationFrame(animate);
 }
 animate();
 
-function spawnHearts(count){
-  for(let i=0;i<count;i++){
-    particles.push({
-      x: Math.random()*canvas.width,
-      y: canvas.height,
-      s: Math.random()*2+1,
-      text: "❤️"
-    });
-  }
-}
-
-// YOUTUBE MUSIC
+/* YOUTUBE */
 let player;
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('player',{
     height:'0',
     width:'0',
     videoId:'58YMgJIaT8w',
-    playerVars:{ autoplay:1, loop:1, playlist:'58YMgJIaT8w', mute:1, playsinline:1 }
+    playerVars:{
+      autoplay:1,
+      loop:1,
+      playlist:'58YMgJIaT8w',
+      mute:1,
+      playsinline:1
+    }
   });
 }
+
 const musicSelect=document.getElementById("music-select");
 const toggleBtn=document.getElementById("toggle-sound");
 let isMuted=true;
 
-musicSelect.addEventListener("change", ()=>{
-  player.loadVideoById({videoId:musicSelect.value});
+musicSelect.onchange=()=>{
+  const id=musicSelect.value;
+  player.loadVideoById({videoId:id});
   player.mute();
   toggleBtn.innerText="🔇";
   isMuted=true;
-});
+};
 
-toggleBtn.addEventListener("click", ()=>{
+toggleBtn.onclick=()=>{
   if(isMuted){
     player.unMute();
     toggleBtn.innerText="🔊";
-  } else {
+  }else{
     player.mute();
     toggleBtn.innerText="🔇";
   }
   isMuted=!isMuted;
-});
+};
+
 </script>
+
 </body>
 </html>
