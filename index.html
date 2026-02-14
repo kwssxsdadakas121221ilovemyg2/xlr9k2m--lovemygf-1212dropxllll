@@ -71,27 +71,6 @@ h1{
   transform:scale(1.1);
   box-shadow:0 0 10px red;
 }
-.gallery{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin-top:20px;
-}
-.gallery img{
-  width:130px;
-  height:130px;
-  object-fit:cover;
-  border-radius:10px;
-  border:2px solid red;
-}
-#special-photo{
-  display:none;
-  margin:20px auto;
-  width:200px;
-  border:2px solid red;
-  border-radius:10px;
-}
 .music-box{
   position:fixed;
   bottom:15px;
@@ -100,6 +79,10 @@ h1{
   padding:10px;
   border:2px solid red;
   border-radius:8px;
+}
+#alt-mesaj{
+  margin-top:20px;
+  font-size:1.2rem;
 }
 </style>
 </head>
@@ -125,10 +108,6 @@ h1{
 
 <p id="alt-mesaj">Sen mutluysan ben de mutluyum... Karanlıkta bile.</p>
 
-<img id="special-photo" src="kiz1.jpg">
-
-<div class="gallery" id="gallery"></div>
-
 <div class="music-box">
 <select id="music-select">
 <option value="58YMgJIaT8w">Yağmurlar 1</option>
@@ -140,7 +119,6 @@ h1{
 <div id="player" style="display:none"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
 // PASSWORD
 document.getElementById("password-btn").addEventListener("click", ()=>{
@@ -152,22 +130,13 @@ document.getElementById("password-btn").addEventListener("click", ()=>{
   }
 });
 
-// FOTOĞRAFLAR
-const fotoUrls = ["kiz1.jpg","kiz2.jpg","kiz3.jpg","kiz4.jpg","kiz5.jpg","kiz6.jpg"];
-const gallery = document.getElementById("gallery");
-fotoUrls.forEach(url=>{
-  const img = document.createElement("img");
-  img.src = url;
-  gallery.appendChild(img);
-});
-
 // LOCAL STORAGE
 function saveAnswer(q,a){ localStorage.setItem(q,a); }
 function loadAnswers(){
   const q1 = localStorage.getItem("q1");
   const q2 = localStorage.getItem("q2");
   if(q1) hideFirst();
-  if(q2==="yes") document.getElementById("special-photo").style.display="block";
+  if(q2==="yes") document.getElementById("alt-mesaj").innerText="Kalp patlaması! ❤️";
 }
 loadAnswers();
 
@@ -188,7 +157,7 @@ function hideFirst(){
   no2.style.display="inline-block";
 }
 
-// BUTONLAR
+// Evet/Hayır ve Kalpler
 yes1.addEventListener("click", ()=>{
   saveAnswer("q1","yes");
   hideFirst();
@@ -201,7 +170,7 @@ no1.addEventListener("click", ()=>{
 });
 yes2.addEventListener("click", ()=>{
   saveAnswer("q2","yes");
-  document.getElementById("special-photo").style.display="block";
+  document.getElementById("alt-mesaj").innerText="Kalp patlaması! ❤️";
   spawnHearts(30);
 });
 no2.addEventListener("mouseover", ()=>{
